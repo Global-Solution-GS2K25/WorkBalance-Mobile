@@ -46,11 +46,11 @@ export async function listCheckinsFallback(usuarioId, token) {
               await Promise.all(list.map((c) => localStore.addLocalCheckin(c)));
             }
           } catch (err) {
-            console.log('Background sync error:', err.message);
+            // Silently fail - expected when offline
           }
         }
       } catch (err) {
-        console.log('Network check error:', err.message);
+        // Silently fail - expected when offline
       }
     })();
 
@@ -87,11 +87,11 @@ export async function createCheckinFallback(payload, token) {
               await localStore.removePendingByLocalId(localId);
             }
           } catch (err) {
-            console.log('Background sync failed:', err.message);
+            // Silently fail - expected when offline
           }
         }
       } catch (err) {
-        console.log('Background sync error:', err.message);
+        // Silently fail - expected when offline
       }
     })();
 
@@ -142,7 +142,7 @@ export async function updateCheckinFallback(localOrServerId, payload, token) {
                 await localStore.saveLocalCheckins(synced);
               }
             } catch (err) {
-              console.log('Background update sync failed:', err.message);
+              // Silently fail - expected when offline
               // Mark for sync
               const pending = await localStore.getPending();
               const hasPending = pending.some((p) => p.id === existing.id && p.type === 'update');
@@ -159,7 +159,7 @@ export async function updateCheckinFallback(localOrServerId, payload, token) {
             }
           }
         } catch (err) {
-          console.log('Background update error:', err.message);
+          // Silently fail - expected when offline
         }
       })();
     } else if (existing.localId) {
@@ -240,8 +240,7 @@ export async function syncPending(token) {
         }
       }
     } catch (err) {
-      // keep pending if sync fails
-      console.error('Sync error:', err);
+      // keep pending if sync fails - silently fail
     }
   }
   return { synced };
