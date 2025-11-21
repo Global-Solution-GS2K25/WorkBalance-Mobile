@@ -76,6 +76,52 @@ workbalance-app/
 - `npm run ios` - Executa no iOS
 - `npm run web` - Executa no navegador
 
+## 🎨 Design
+
+O aplicativo utiliza um design moderno com tema dark mode, incluindo:
+- Paleta de cores escura e elegante
+- Gradientes sutis nos fundos
+- Componentes com bordas arredondadas
+- Tipografia clara e legível
+- Animações suaves e transições
+
+## 🔐 Segurança
+
+- Dados armazenados localmente com AsyncStorage
+- Sincronização segura com API quando online
+- Tokens de autenticação gerenciados pelo AuthContext
+
+## 🌐 Suporte Offline
+
+O aplicativo foi desenvolvido com foco em funcionamento offline:
+- Todos os dados são salvos localmente primeiro
+- Sincronização acontece em background quando há conexão
+- Usuário não precisa se preocupar com status de conexão
+- Dados são preservados mesmo sem internet
+
+## 🐛 Troubleshooting
+
+### Problemas comuns:
+
+1. **Erro ao iniciar o servidor**
+   - Limpe o cache: `npx expo start --clear`
+   - Reinstale as dependências: `rm -rf node_modules && npm install`
+
+2. **Problemas de sincronização**
+   - Verifique sua conexão com a internet
+   - Os dados são salvos localmente, então não há perda de informação
+
+3. **Erro de navegação**
+   - Certifique-se de estar logado para acessar as telas internas
+
+## 👥 Contribuindo
+
+Este é um projeto privado. Para sugestões ou problemas, entre em contato com a equipe de desenvolvimento.
+
+## 📞 Contato
+
+Para mais informações sobre o projeto, entre em contato com a equipe responsável.
+
 ## 📄 Licença
 
 Este projeto é privado.
