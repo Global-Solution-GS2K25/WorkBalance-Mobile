@@ -16,14 +16,24 @@ export default function CheckinFormScreen({ route, navigation }) {
   const [sintomasFisicos, setSintomasFisicos] = useState(existing?.sintomasFisicos || '');
   const [observacoes, setObservacoes] = useState(existing?.observacoes || '');
   const [saving, setSaving] = useState(false);
-  const { token } = useContext(AuthContext);
+  const { token, user } = useContext(AuthContext);
 
   async function handleSubmit() {
     if (saving) return; // Prevent double submission
     
     setSaving(true);
+    
+    // Get usuarioId from user context, fallback to 1 if not available (for testing)
+    const usuarioId = user?.usuarioId || 1;
+    
+    if (!usuarioId || usuarioId === 0) {
+      Alert.alert('Erro', 'Usuário não identificado. Faça login novamente.');
+      setSaving(false);
+      return;
+    }
+    
     const payload = {
-      usuarioId: 1, // TODO: replace with logged user id
+      usuarioId: usuarioId,
       humor: Number(humor) || 3,
       nivelEstresse: Number(nivelEstresse) || 2,
       qualidadeSono: Number(qualidadeSono) || 4,

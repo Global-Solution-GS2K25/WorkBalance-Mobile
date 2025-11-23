@@ -10,14 +10,15 @@ import { colors, spacing } from '../theme';
 export default function CheckinListScreen({ navigation }) {
   const [checkins, setCheckins] = useState([]);
   const [loading, setLoading] = useState(false);
-  const { token } = useContext(AuthContext);
+  const { token, user } = useContext(AuthContext);
 
   async function load() {
     setLoading(true);
     try {
-      // NOTE: replace usuarioId with the logged user id when available
+      // Get usuarioId from user context, fallback to 1 if not available (for testing)
+      const usuarioId = user?.usuarioId || 1;
       // token can be null when offline, but we still want to load local checkins
-      const res = await listCheckinsFallback(1, token || '');
+      const res = await listCheckinsFallback(usuarioId, token || '');
       // Sort by date, most recent first
       const sorted = (res || []).sort((a, b) => {
         try {

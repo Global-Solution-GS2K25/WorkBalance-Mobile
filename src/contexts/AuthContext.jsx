@@ -32,16 +32,40 @@ export function AuthProvider({ children }) {
     try {
       const res = await api.post('/api/auth/login', { email, senha });
       if (res && res.data && res.data.token) {
-        setToken(res.data.token);
-        await AsyncStorage.setItem(TOKEN_KEY, res.data.token);
+        const token = res.data.token;
+        setToken(token);
+        await AsyncStorage.setItem(TOKEN_KEY, token);
+        
+        // Try to get usuarioId from local storage first
+        let usuarioId = null;
+        try {
+          const stored = await localStore.findUserByEmail(email);
+          usuarioId = stored?.usuarioId || null;
+        } catch (e) {}
+        
+        // If not found locally, try to get from register response or create a helper endpoint
+        // For now, we'll rely on local storage from registration
+        const userObj = { 
+          email, 
+          nome: res.data.nome || email, 
+          usuarioId: usuarioId,
+          offline: false 
+        };
+        setUser(userObj);
+        
         // save local user copy for offline login
         try {
           const pwHash = await Crypto.digestStringAsync(Crypto.CryptoDigestAlgorithm.SHA256, senha);
-          const userObj = { email, nome: res.data.nome || email, token: res.data.token };
-          await localStore.addLocalUser({ email, nome: userObj.nome, passwordHash: pwHash, usuarioId: res.data.usuarioId || null });
+          await localStore.addLocalUser({ 
+            email, 
+            nome: userObj.nome, 
+            passwordHash: pwHash, 
+            usuarioId: usuarioId 
+          });
         } catch (e) {}
+        
         // try to sync any pending local checkins
-        try { await syncPending(res.data.token); } catch (e) {}
+        try { await syncPending(token); } catch (e) {}
         return true;
       }
     } catch (err) {
@@ -54,7 +78,12 @@ export function AuthProvider({ children }) {
           // create a local token to allow access while offline
           const localToken = `LOCAL-${email}`;
           setToken(localToken);
-          setUser({ nome: stored.nome, email: stored.email, usuarioId: stored.usuarioId || null, offline: true });
+          setUser({ 
+            nome: stored.nome, 
+            email: stored.email, 
+            usuarioId: stored.usuarioId || null, 
+            offline: true 
+          });
           await AsyncStorage.setItem(TOKEN_KEY, localToken);
           return true;
         }
@@ -69,16 +98,28 @@ export function AuthProvider({ children }) {
     try {
       const res = await api.post('/api/auth/register', data);
       // on success save local copy with hashed password for offline login
+      const usuarioId = res.data?.id || null;
       try {
         const pwHash = await Crypto.digestStringAsync(Crypto.CryptoDigestAlgorithm.SHA256, data.senha);
-        await localStore.addLocalUser({ email: data.email, nome: data.nome, passwordHash: pwHash, usuarioId: res.data?.id || null });
+        await localStore.addLocalUser({ 
+          email: data.email, 
+          nome: data.nome, 
+          passwordHash: pwHash, 
+          usuarioId: usuarioId 
+        });
       } catch (e) {}
       return res;
     } catch (err) {
       // offline register: store locally and allow login offline
       try {
         const pwHash = await Crypto.digestStringAsync(Crypto.CryptoDigestAlgorithm.SHA256, data.senha);
-        await localStore.addLocalUser({ email: data.email, nome: data.nome, passwordHash: pwHash, usuarioId: null, localOnly: true });
+        await localStore.addLocalUser({ 
+          email: data.email, 
+          nome: data.nome, 
+          passwordHash: pwHash, 
+          usuarioId: null, 
+          localOnly: true 
+        });
         return { offline: true };
       } catch (e) {
         throw err;
