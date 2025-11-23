@@ -15,7 +15,6 @@ async function saveLocalCheckins(list) {
 
 async function addLocalCheckin(checkin) {
   const list = await getLocalCheckins();
-  // Avoid duplicates - check by id or localId
   const exists = list.some(
     (c) => 
       (c.id && checkin.id && c.id === checkin.id) ||
@@ -65,7 +64,6 @@ export default {
   addPending,
   removePendingByLocalId,
   clearPending,
-  // user helpers
   getLocalUsers: async function () {
     const raw = await AsyncStorage.getItem(USERS_KEY);
     return raw ? JSON.parse(raw) : [];

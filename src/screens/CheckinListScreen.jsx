@@ -15,11 +15,8 @@ export default function CheckinListScreen({ navigation }) {
   async function load() {
     setLoading(true);
     try {
-      // Get usuarioId from user context, fallback to 1 if not available (for testing)
       const usuarioId = user?.usuarioId || 1;
-      // token can be null when offline, but we still want to load local checkins
       const res = await listCheckinsFallback(usuarioId, token || '');
-      // Sort by date, most recent first
       const sorted = (res || []).sort((a, b) => {
         try {
           const dateA = new Date(a.dataHora || 0).getTime();
@@ -32,7 +29,6 @@ export default function CheckinListScreen({ navigation }) {
       setCheckins(sorted);
     } catch (err) {
       console.error('Error loading checkins:', err);
-      // Even if there's an error, try to load local checkins
       try {
         const localCheckins = await localStore.getLocalCheckins();
         setCheckins(localCheckins || []);
@@ -59,7 +55,6 @@ export default function CheckinListScreen({ navigation }) {
     }
   }
 
-  // try sync when screen focused
   React.useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
       (async () => {
@@ -70,7 +65,6 @@ export default function CheckinListScreen({ navigation }) {
           load();
         } catch (e) {
           console.error('Error syncing on focus:', e);
-          // Still try to load even if sync fails
           load();
         }
       })();

@@ -19,11 +19,10 @@ export default function CheckinFormScreen({ route, navigation }) {
   const { token, user } = useContext(AuthContext);
 
   async function handleSubmit() {
-    if (saving) return; // Prevent double submission
+    if (saving) return;
     
     setSaving(true);
     
-    // Get usuarioId from user context, fallback to 1 if not available (for testing)
     const usuarioId = user?.usuarioId || 1;
     
     if (!usuarioId || usuarioId === 0) {
@@ -44,7 +43,6 @@ export default function CheckinFormScreen({ route, navigation }) {
     try {
       let res;
       if (editing && existing) {
-        // Update existing check-in (works offline too)
         const checkinId = existing.id || existing.localId;
         if (!checkinId) {
           Alert.alert('Erro', 'ID do check-in não encontrado');
@@ -53,11 +51,9 @@ export default function CheckinFormScreen({ route, navigation }) {
         }
         res = await updateCheckinFallback(checkinId, payload, token || '');
       } else {
-        // Create new check-in
         res = await createCheckinFallback(payload, token || '');
       }
       
-      // Always show success since it's saved locally
       setSaving(false);
       Alert.alert(
         'Sucesso', 

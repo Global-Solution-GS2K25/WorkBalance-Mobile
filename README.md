@@ -114,6 +114,10 @@ O aplicativo foi desenvolvido com foco em funcionamento offline:
 3. **Erro de navegação**
    - Certifique-se de estar logado para acessar as telas internas
 
+## 📽️ Vídeo
+
+https://youtu.be/3yaXkD1Iv1I  
+
 ## 👥 Autores
 
 - **Juan Pablo Rebelo Coelho** - RM: 560445

@@ -24,7 +24,6 @@ export default function AppNavigator() {
       }}
     >
       {token == null ? (
-        // Auth screens
         <>
           <Stack.Screen 
             name="Login" 
@@ -37,8 +36,7 @@ export default function AppNavigator() {
             options={{ title: 'Criar conta', headerTransparent: true, headerTintColor: colors.text }} 
           />
         </>
-      ) : (
-        // App screens - all screens must be registered when authenticated
+      ) : ( 
         <>
           <Stack.Screen 
             name="Home" 

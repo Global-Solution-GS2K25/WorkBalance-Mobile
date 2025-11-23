@@ -21,7 +21,6 @@ export function AuthProvider({ children }) {
   }, []);
 
   async function login(email, senha) {
-    // Quick test shortcut: admin/admin bypasses API (useful for local testing)
     if (email === 'admin' && senha === 'admin') {
       const localToken = 'ADMIN-LOCAL-TOKEN';
       setToken(localToken);
@@ -36,15 +35,12 @@ export function AuthProvider({ children }) {
         setToken(token);
         await AsyncStorage.setItem(TOKEN_KEY, token);
         
-        // Try to get usuarioId from local storage first
         let usuarioId = null;
         try {
           const stored = await localStore.findUserByEmail(email);
           usuarioId = stored?.usuarioId || null;
         } catch (e) {}
-        
-        // If not found locally, try to get from register response or create a helper endpoint
-        // For now, we'll rely on local storage from registration
+
         const userObj = { 
           email, 
           nome: res.data.nome || email, 
@@ -53,7 +49,6 @@ export function AuthProvider({ children }) {
         };
         setUser(userObj);
         
-        // save local user copy for offline login
         try {
           const pwHash = await Crypto.digestStringAsync(Crypto.CryptoDigestAlgorithm.SHA256, senha);
           await localStore.addLocalUser({ 
@@ -64,18 +59,15 @@ export function AuthProvider({ children }) {
           });
         } catch (e) {}
         
-        // try to sync any pending local checkins
         try { await syncPending(token); } catch (e) {}
         return true;
       }
     } catch (err) {
-      // login failed (maybe offline) — try offline authentication
       try {
         const stored = await localStore.findUserByEmail(email);
         if (!stored) return false;
         const pwHash = await Crypto.digestStringAsync(Crypto.CryptoDigestAlgorithm.SHA256, senha);
         if (pwHash === stored.passwordHash) {
-          // create a local token to allow access while offline
           const localToken = `LOCAL-${email}`;
           setToken(localToken);
           setUser({ 
@@ -97,7 +89,6 @@ export function AuthProvider({ children }) {
   async function register(data) {
     try {
       const res = await api.post('/api/auth/register', data);
-      // on success save local copy with hashed password for offline login
       const usuarioId = res.data?.id || null;
       try {
         const pwHash = await Crypto.digestStringAsync(Crypto.CryptoDigestAlgorithm.SHA256, data.senha);
@@ -110,7 +101,6 @@ export function AuthProvider({ children }) {
       } catch (e) {}
       return res;
     } catch (err) {
-      // offline register: store locally and allow login offline
       try {
         const pwHash = await Crypto.digestStringAsync(Crypto.CryptoDigestAlgorithm.SHA256, data.senha);
         await localStore.addLocalUser({ 
