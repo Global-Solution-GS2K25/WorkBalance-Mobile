@@ -114,15 +114,12 @@ O aplicativo foi desenvolvido com foco em funcionamento offline:
 3. **Erro de navegação**
    - Certifique-se de estar logado para acessar as telas internas
 
-## 👥 Contribuindo
+## 👥 Autores
 
-Este é um projeto privado. Para sugestões ou problemas, entre em contato com a equipe de desenvolvimento.
-
-## 📞 Contato
-
-Para mais informações sobre o projeto, entre em contato com a equipe responsável.
+- **Juan Pablo Rebelo Coelho** - RM: 560445
+- **Maria Eduarda Fernandes Rocha** - RM: 560657
+- **Victor de Carvalho Alves** - RM: 560395
 
 ## 📄 Licença
 
-Este projeto é privado.
-
+Este projeto foi desenvolvido como parte do trabalho acadêmico da FIAP - Global Solution 2025.
