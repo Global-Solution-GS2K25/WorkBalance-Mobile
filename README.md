@@ -4,7 +4,7 @@ Aplicativo mobile para monitoramento de bem-estar e equilíbrio entre vida pesso
 
 ## 📱 Sobre o Projeto
 
-O WorkBalance é um aplicativo React Native desenvolvido com Expo que permite aos usuários registrar e acompanhar seu bem-estar através de check-ins diários. O app funciona completamente offline e sincroniza automaticamente quando há conexão com a internet.
+O WorkBalance é uma plataforma integrada desenvolvida para monitorar, analisar e apoiar o bem-estar dos colaboradores no ambiente de trabalho. A solução combina dados subjetivos (check-ins emocionais) e objetivos (condições do ambiente físico), com o objetivo de prevenir o adoecimento mental, melhorar o clima organizacional e apoiar a tomada de decisão do RH e da gestão
 
 ## ✨ Funcionalidades
 
